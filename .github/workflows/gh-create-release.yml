@@ -43,7 +43,7 @@ jobs:
         if: ${{ steps.bump-semver.outputs.new_version != null }}
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-          exclude: '^meta|^docs|^document|^lint|^ci|^refactor|readme|workflow|bump|dependencies|yml|^v?\d+\.\d+\.\d+'
+          exclude: '^meta|^docs|^document|^lint|^ci|^refactor|readme|bump|dependencies|^v?\d+\.\d+\.\d+'
           tag: "${{ steps.bump-semver.outputs.new_version }}"
           title: "Version ${{ steps.bump-semver.outputs.new_version }}"
           commit-template: "- {title} ← {hash}"
