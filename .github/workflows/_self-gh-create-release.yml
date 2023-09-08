@@ -1,0 +1,9 @@
+name: Create new release
+
+on:
+  pull_request_target:
+    types: [closed]
+
+jobs:
+  release:
+    uses: getindata/github-workflows/.github/workflows/gh-create-release.yml@main

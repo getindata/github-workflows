@@ -1,0 +1,66 @@
+name: Create new release with changelog
+
+on:
+  workflow_call:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
+
+      - name: Check release label
+        id: release-label
+        uses: getindata/action-release-label@v1.3.0
+        if: ${{ github.event.pull_request.merged == true }}
+
+      - name: Get latest tag
+        id: latest-tag
+        uses: actions-ecosystem/action-get-latest-tag@v1.6.0
+        if: ${{ steps.release-label.outputs.level != null }}
+
+      - name: Bump semantic version
+        id: bump-semver
+        uses: actions-ecosystem/action-bump-semver@v1
+        if: ${{ steps.release-label.outputs.level != null }}
+        with:
+          current_version: ${{ steps.latest-tag.outputs.tag }}
+          level: ${{ steps.release-label.outputs.level }}
+
+      - name: Push new semver tag
+        id: new-semver-tag
+        uses: actions-ecosystem/action-push-tag@v1
+        if: ${{ steps.bump-semver.outputs.new_version != null }}
+        with:
+          tag: ${{ steps.bump-semver.outputs.new_version }}
+          message: "${{ steps.bump-semver.outputs.new_version }}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}"
+
+      - name: Generate new release with changelog
+        id: new-release
+        uses: fregante/release-with-changelog@v3
+        if: ${{ steps.bump-semver.outputs.new_version != null }}
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          exclude: '^meta|^docs|^document|^lint|^ci|^refactor|readme|workflow|bump|dependencies|yml|^v?\d+\.\d+\.\d+'
+          tag: "${{ steps.bump-semver.outputs.new_version }}"
+          title: "Version ${{ steps.bump-semver.outputs.new_version }}"
+          commit-template: "- {title} ← {hash}"
+          skip-on-empty: true
+          template: |
+            ### Changelog
+
+            {commits}
+
+            {range}
+
+      - name: Add PR comment
+        id: pr-comment
+        uses: actions-ecosystem/action-create-comment@v1
+        if: ${{ steps.bump-semver.outputs.new_version != null }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ github.event.pull_request.number }}
+          body: |
+            The new version [${{ steps.bump-semver.outputs.new_version }}](https://github.com/${{ github.repository }}/releases/tag/${{ steps.bump-semver.outputs.new_version }}) has been released :tada:
