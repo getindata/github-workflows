@@ -7,11 +7,11 @@ on:
     inputs:
       terraform-docs-version:
         type: string
-        required: true
+        required: false
         default: v0.16.0
       tflint-version:
         type: string
-        required: true
+        required: false
         default: v0.48.0
 
 jobs:
