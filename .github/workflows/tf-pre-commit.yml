@@ -1,15 +1,17 @@
 name: Terraform Pre-Commit
 
+permissions: {}
+
 on:
   workflow_call:
     inputs:
       terraform-docs-version:
         type: string
-        required: false
+        required: true
         default: v0.16.0
       tflint-version:
         type: string
-        required: false
+        required: true
         default: v0.48.0
 
 jobs:
