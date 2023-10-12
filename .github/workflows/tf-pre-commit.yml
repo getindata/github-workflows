@@ -1,6 +1,7 @@
 name: Terraform Pre-Commit
 
-permissions: {}
+permissions:
+  contents: read
 
 on:
   workflow_call:
