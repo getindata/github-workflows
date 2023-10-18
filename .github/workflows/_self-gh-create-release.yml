@@ -11,3 +11,7 @@ on:
 jobs:
   release:
     uses: getindata/github-workflows/.github/workflows/gh-create-release.yml@main
+
+  partial_semver_tags:
+    needs: release
+    uses: getindata/github-workflows/.github/workflows/gh-partial-semver-tags.yml@main
