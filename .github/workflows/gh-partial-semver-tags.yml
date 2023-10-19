@@ -1,0 +1,50 @@
+name: Add partial semver tags
+
+permissions:
+  contents: write
+
+on:
+  workflow_call:
+
+jobs:
+  get-semver:
+    runs-on: ubuntu-latest
+    outputs:
+      major: ${{ steps.semver_parser.outputs.major }}
+      minor: ${{ steps.semver_parser.outputs.minor }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
+
+      - name: Get latest tag
+        id: latest_tag
+        uses: actions-ecosystem/action-get-latest-tag@v1.6.0
+        with:
+          semver_only: true
+
+      - name: Parse semver string
+        id: semver_parser
+        uses: booxmedialtd/ws-action-parse-semver@v1
+        with:
+          input_string: ${{ steps.latest_tag.outputs.tag }}
+          version_extractor_regex: '^v(.*)$'
+
+  partial-semver-tags:
+    needs: get-semver
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tags: [
+          "v${{ needs.get-semver.outputs.major }}",
+          "v${{ needs.get-semver.outputs.major }}.${{ needs.get-semver.outputs.minor }}"
+        ]
+
+    steps:
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: ${{ matrix.tags }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

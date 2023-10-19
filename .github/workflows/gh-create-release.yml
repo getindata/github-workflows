@@ -23,6 +23,8 @@ jobs:
       - name: Get latest tag
         id: latest-tag
         uses: actions-ecosystem/action-get-latest-tag@v1.6.0
+        with:
+          semver_only: true
         if: ${{ steps.release-label.outputs.level != null }}
 
       - name: Bump semantic version
