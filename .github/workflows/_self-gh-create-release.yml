@@ -1,4 +1,4 @@
-name: Create new release
+name: Create new release with changelog and partial semver tags
 
 permissions:
   contents: write
