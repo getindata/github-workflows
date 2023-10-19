@@ -42,7 +42,7 @@ jobs:
         ]
 
     steps:
-      - name: Tag Repo
+      - name: Tag repo
         uses: richardsimko/update-tag@v1
         with:
           tag_name: ${{ matrix.tags }}
