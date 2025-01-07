@@ -50,7 +50,7 @@ jobs:
 
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@${{ github.event.inputs.min-max-version }}
+        uses: clowdhaus/terraform-min-max@$INPUT_MIN_MAX_VERSION
         with:
           directory: ${{ matrix.directory }}
 
