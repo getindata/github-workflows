@@ -57,7 +57,7 @@ jobs:
       - name: Pre-commit Terraform ${{ steps.minMax.outputs.minVersion }}
         # Run only validate pre-commit check on min version supported
         if: ${{ matrix.directory !=  '.' }}
-        uses: clowdhaus/terraform-composite-actions/pre-commit@${{ inputs.composite-actions-version }}
+        uses: clowdhaus/terraform-composite-actions/pre-commit@$INPUT_COMPOSITE_ACTIONS_VERSION
         with:
           terraform-version: ${{ steps.minMax.outputs.minVersion }}
           args: "terraform-validate --color=always --show-diff-on-failure --files ${{ matrix.directory }}/*"
@@ -65,7 +65,7 @@ jobs:
       - name: Pre-commit Terraform ${{ steps.minMax.outputs.minVersion }}
         # Run only validate pre-commit check on min version supported
         if: ${{ matrix.directory ==  '.' }}
-        uses: clowdhaus/terraform-composite-actions/pre-commit@${{ inputs.composite-actions-version }}
+        uses: clowdhaus/terraform-composite-actions/pre-commit@$INPUT_COMPOSITE_ACTIONS_VERSION
         with:
           terraform-version: ${{ steps.minMax.outputs.minVersion }}
           args: "terraform-validate --color=always --show-diff-on-failure --files $(ls *.tf)"
@@ -83,10 +83,10 @@ jobs:
 
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@${{ inputs.min-max-version }}
+        uses: clowdhaus/terraform-min-max@$INPUT_MIN_MAX_VERSION
 
       - name: Pre-commit Terraform ${{ steps.minMax.outputs.maxVersion }}
-        uses: clowdhaus/terraform-composite-actions/pre-commit@${{ inputs.composite-actions-version }}
+        uses: clowdhaus/terraform-composite-actions/pre-commit@$INPUT_COMPOSITE_ACTIONS_VERSION
         with:
           terraform-version: ${{ steps.minMax.outputs.maxVersion }}
           terraform-docs-version: ${{ inputs.terraform-docs-version }}
