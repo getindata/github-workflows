@@ -35,7 +35,7 @@ jobs:
 
       - name: Get root directories
         id: dirs
-        uses: clowdhaus/terraform-composite-actions/directories@${{ inputs.composite-actions-version }}
+        uses: clowdhaus/terraform-composite-actions/directories@$INPUT_COMPOSITE_ACTIONS_VERSION
 
   preCommitMinVersions:
     name: Min TF pre-commit
@@ -50,7 +50,7 @@ jobs:
 
       - name: Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@${{ inputs.min-max-version }}
+        uses: clowdhaus/terraform-min-max@${{ github.event.inputs.min-max-version }}
         with:
           directory: ${{ matrix.directory }}
 
